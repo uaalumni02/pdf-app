@@ -6,7 +6,7 @@ const SubmitBtn = (props) => {
     <MDBBtn
       className="btn btn-outline-purple"
       type="submit"
-    //   onClick={props.onClick}
+      onClick={props.onClick}
     >
      {props.label}
     </MDBBtn>

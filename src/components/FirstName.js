@@ -7,7 +7,7 @@ const FirstName = props => {
     <MDBInput
     //   name={props.name}
       label="First Name"
-    //   onChange={props.onChange}
+      onChange={props.onChange}
       group
       type="text"
       validate
