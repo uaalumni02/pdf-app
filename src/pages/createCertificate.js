@@ -86,7 +86,6 @@ const Certificate = () => {
                   setLastName(e.target.value.toLowerCase().trim())
                 }
               />
-              {/* <LastName last_name="lastName" /> */}
               <select
                 id="defaultFormCardNameEx"
                 className="form-control"
