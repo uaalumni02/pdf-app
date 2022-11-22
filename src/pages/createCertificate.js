@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 // import FirstName from "../components/FirstName";
 // import LastName from "../components/LastName";
 import SubmitBtn from "../components/SubmitBtn";
@@ -19,6 +20,8 @@ const Certificate = () => {
   const [awardType, setAwardType] = useState([]);
   const [awardId, setAwardId] = useState("");
   const [certificateDate, setCertificateDate] = useState("");
+  const [certificateConfirmation, setCertificateConfirmation] = useState(false);
+  const [certificateId, setCertificateId] = useState("");
 
   const fetchAwardData = () => {
     fetch("http://localhost:3000/api/award", {
@@ -54,6 +57,10 @@ const Certificate = () => {
       .then((res) => res.json())
       .then((response) => {
         console.log(response);
+        setCertificateId(response.data._id);
+        if (response.success === true) {
+          setCertificateConfirmation(true);
+        }
       })
       .catch((error) => console.error("Error:", error));
   };
@@ -62,6 +69,7 @@ const Certificate = () => {
     <MDBContainer>
       <header className="logo"></header>
       <br></br>
+      {certificateConfirmation ? <Navigate to={`/pdf/${certificateId}`} /> : ""}
       <MDBRow>
         <MDBCol md="5">
           <MDBCard className="certificateCard">
