@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-// import FirstName from "../components/FirstName";
-// import LastName from "../components/LastName";
 import SubmitBtn from "../components/SubmitBtn";
 
 import {
