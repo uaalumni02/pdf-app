@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import SubmitBtn from "../components/SubmitBtn";
 
+import "../certificate.css";
+
 import {
   MDBContainer,
   MDBRow,
@@ -20,6 +22,7 @@ const Certificate = () => {
   const [certificateDate, setCertificateDate] = useState("");
   const [certificateConfirmation, setCertificateConfirmation] = useState(false);
   const [certificateId, setCertificateId] = useState("");
+  const [invalidCertificate, setInvalidCertificate] = useState("");
 
   const fetchAwardData = () => {
     fetch("http://localhost:3000/api/award", {
@@ -49,23 +52,26 @@ const Certificate = () => {
         firstName,
         lastName,
         awardType: awardId,
-        certificateDate
+        certificateDate,
       }),
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log(response);
-        setCertificateId(response.data._id);
-        if (response.success === true) {
-          setCertificateConfirmation(true);
+        console.log(response.success)
+        if(response.success === false) {
+          setInvalidCertificate("First and last name must be between 2 & 15 charaters. Date and award type are also required")
         }
+        setCertificateId(response.data._id);
+
+        if (response.success) {
+          setCertificateConfirmation(true);
+        } 
       })
       .catch((error) => console.error("Error:", error));
   };
-
   return (
     <MDBContainer>
-      <header className="logo"></header>
+      <header className="logo"> </header>
       <br></br>
       {certificateConfirmation ? <Navigate to={`/pdf/${certificateId}`} /> : ""}
       <MDBRow>
@@ -79,7 +85,6 @@ const Certificate = () => {
               </MDBRow>
             </div>
             <MDBCardBody>
-              {/* <FirstName first_name="firstName" value={firstName} onChange={onChange} /> */}
               <MDBInput
                 label="First Name"
                 onChange={(e) =>
@@ -118,23 +123,22 @@ const Certificate = () => {
                 id="defaultFormCardNameEx"
                 className="form-control"
                 name="certificateDate"
-                onChange={e => setCertificateDate(e.target.value)}
+                onChange={(e) => setCertificateDate(e.target.value)}
               />
               <div className="text-center py-4 mt-3">
-                <SubmitBtn label="Submit" onClick={handleSubmit} />
-                {/* <MDBBtn
-                  color="danger"
-                  type="submit"
-                  className="btn-block z-depth-2"
+                <SubmitBtn
+                  className="btn"
+                  label="Submit"
                   onClick={handleSubmit}
-                >
-                </MDBBtn> */}
+                />
+                 <p>{invalidCertificate}</p>
               </div>
             </MDBCardBody>
           </MDBCard>
         </MDBCol>
       </MDBRow>
     </MDBContainer>
+    
   );
 };
 export default Certificate;

@@ -1,0 +1,10 @@
+.certificateCard {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+}
+
+.btn {
+width: 150px;
+height: 50px;
+}
