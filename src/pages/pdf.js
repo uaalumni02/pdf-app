@@ -1,4 +1,7 @@
 import React, { useEffect } from "react";
+import SubmitBtn from "../components/SubmitBtn";
+
+import { MDBContainer } from "mdbreact";
 
 const Pdf = () => {
   const generatePDF = () => {
@@ -22,6 +25,14 @@ const Pdf = () => {
     generatePDF();
   }, []);
 
-  return <h1>Your certificate</h1>;
+  return (
+    <MDBContainer>
+      <h1 className="confirm_text">Your certificate has been downloaded</h1>
+      <div className="home_btn" >
+        <SubmitBtn onClick={event =>  window.location.href='/'} label="Home" />
+      </div>
+      
+    </MDBContainer>
+  );
 };
 export default Pdf;
