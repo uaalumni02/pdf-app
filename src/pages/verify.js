@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 import SubmitBtn from "../components/SubmitBtn";
 
 import {
@@ -14,9 +15,10 @@ import {
 const Verify = () => {
   const [certificateId, setCertificateId] = useState("");
   const [invalidCertificate, setInvalidCertificate] = useState("");
+  const [certificateConfirmation, setCertificateConfirmation] = useState(false);
+ 
   const handleSubmit = () => {
-    const url = window.location.pathname;
-    const id = url.substring(url.lastIndexOf("/") + 1);
+    
     fetch("http://localhost:3000/api/certificate/" + certificateId, {
       method: "GET",
     })
@@ -26,6 +28,9 @@ const Verify = () => {
         if (response.success === false) {
           setInvalidCertificate("Invalid Certificate Id");
         }
+        if (response.success) {
+          setCertificateConfirmation(true);
+        }
       })
       .catch((error) => console.error("Error:", error));
   };
@@ -34,6 +39,7 @@ const Verify = () => {
     <MDBContainer>
       <header className="logo"></header>
       <br></br>
+      {certificateConfirmation ? <Navigate to={`/pdf/${certificateId}`} /> : ""}
       <MDBRow>
         <MDBCol md="5">
           <MDBCard className="certificateCard">
