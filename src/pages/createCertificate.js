@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import SubmitBtn from "../components/SubmitBtn";
-
 import "../certificate.css";
 
 import {
@@ -57,21 +56,22 @@ const Certificate = () => {
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log(response.success)
-        if(response.success === false) {
-          setInvalidCertificate("First and last name must be between 2 & 15 charaters. Date and award type are also required")
+        if (response.success === false) {
+          setInvalidCertificate(
+            "First and last name must be between 2 & 15 charaters. Date and award type are also required"
+          );
         }
         setCertificateId(response.data._id);
 
         if (response.success) {
           setCertificateConfirmation(true);
-        } 
+        }
       })
       .catch((error) => console.error("Error:", error));
   };
   return (
     <MDBContainer>
-      <header className="logo"> </header>
+      <header className="logo"></header>
       <br></br>
       {certificateConfirmation ? <Navigate to={`/pdf/${certificateId}`} /> : ""}
       <MDBRow>
@@ -131,14 +131,18 @@ const Certificate = () => {
                   label="Submit"
                   onClick={handleSubmit}
                 />
-                 <p>{invalidCertificate}</p>
+                <SubmitBtn
+                  className="btn"
+                  label="Verify"
+                  onClick={(event) => (window.location.href = "/verify")}
+                />
+                <p>{invalidCertificate}</p>
               </div>
             </MDBCardBody>
           </MDBCard>
         </MDBCol>
       </MDBRow>
     </MDBContainer>
-    
   );
 };
 export default Certificate;
