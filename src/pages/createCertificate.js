@@ -88,13 +88,13 @@ const Certificate = () => {
               <MDBInput
                 label="First Name"
                 onChange={(e) =>
-                  setFirstName(e.target.value.toLowerCase().trim())
+                  setFirstName(e.target.value.trim())
                 }
               />
               <MDBInput
                 label="Last Name"
                 onChange={(e) =>
-                  setLastName(e.target.value.toLowerCase().trim())
+                  setLastName(e.target.value.trim())
                 }
               />
               <select

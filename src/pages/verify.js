@@ -9,7 +9,6 @@ import {
   MDBCard,
   MDBCardBody,
   MDBInput,
-  MDBBtn,
 } from "mdbreact";
 
 const Verify = () => {
