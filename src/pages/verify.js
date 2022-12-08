@@ -16,20 +16,21 @@ const Verify = () => {
   const [certificateId, setCertificateId] = useState("");
   const [invalidCertificate, setInvalidCertificate] = useState("");
   const [certificateConfirmation, setCertificateConfirmation] = useState(false);
- 
+
   const handleSubmit = () => {
-    
     fetch("http://localhost:3000/api/certificate/" + certificateId, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log(response);
         if (response.success === false) {
           setInvalidCertificate("Invalid Certificate Id");
         }
         if (response.success) {
           setCertificateConfirmation(true);
+        }
+        if(certificateId === "") {
+          setCertificateConfirmation(false)
         }
       })
       .catch((error) => console.error("Error:", error));
@@ -52,12 +53,13 @@ const Verify = () => {
             </div>
             <MDBCardBody>
               <MDBInput
+              required
+              type="password"
                 label="Enter Code"
                 onChange={(e) =>
                   setCertificateId(e.target.value.toLowerCase().trim())
                 }
               />
-
               <br></br>
               <br></br>
 
@@ -66,13 +68,15 @@ const Verify = () => {
                   className="btn"
                   label="Verify"
                   onClick={handleSubmit}
+                  type="Submit"
                 />
                 <SubmitBtn
                   className="btn"
                   onClick={(event) => (window.location.href = "/")}
                   label="Home"
                 />
-                <br></br><br></br>
+                <br></br>
+                <br></br>
                 <p>{invalidCertificate}</p>
               </div>
             </MDBCardBody>
