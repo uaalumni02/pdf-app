@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { Navigate } from "react-router-dom";
+import initialState from "../store/store";
+import reducer from "../reducer/reducer";
+
 import SubmitBtn from "../components/SubmitBtn";
 
 import {
@@ -12,10 +15,7 @@ import {
 } from "mdbreact";
 
 const Verify = () => {
-  const [certificateId, setCertificateId] = useState("");
-  const [invalidCertificate, setInvalidCertificate] = useState("");
-  const [certificateConfirmation, setCertificateConfirmation] = useState(false);
-
+  const [state, dispatch] = useReducer(reducer, initialState.verify);
   const handleSubmit = () => {
     fetch("http://localhost:3000/api/certificate/" + certificateId, {
       method: "GET",
@@ -23,17 +23,35 @@ const Verify = () => {
       .then((res) => res.json())
       .then((response) => {
         if (response.success === false) {
-          setInvalidCertificate("Invalid Certificate Id");
+          dispatch({
+            field: "invalidCertificate",
+            value: "Invalid Certificate Id",
+          });
         }
         if (response.success) {
-          setCertificateConfirmation(true);
+          dispatch({
+            field: "certificateConfirmation",
+            value: true,
+          });
         }
-        if(certificateId === "") {
-          setCertificateConfirmation(false)
+        if (certificateId === "") {
+          dispatch({
+            field: "certificateConfirmation",
+            value: false,
+          });
         }
       })
       .catch((error) => console.error("Error:", error));
   };
+
+  const onChange = (e) => {
+    dispatch({
+      field: e.target.name,
+      value: e.target.value,
+    });
+  };
+
+  const { certificateId, invalidCertificate, certificateConfirmation } = state;
 
   return (
     <MDBContainer>
@@ -52,12 +70,15 @@ const Verify = () => {
             </div>
             <MDBCardBody>
               <MDBInput
-              required
-              type="password"
+                required
+                type="password"
                 label="Enter Code"
-                onChange={(e) =>
-                  setCertificateId(e.target.value.toLowerCase().trim())
-                }
+                name="certificateId"
+                value={certificateId}
+                // onChange={(e) =>
+                //   setCertificateId(e.target.value.toLowerCase().trim())
+                // }
+                onChange={onChange}
               />
               <br></br>
               <br></br>

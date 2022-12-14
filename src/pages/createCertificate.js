@@ -87,15 +87,11 @@ const Certificate = () => {
             <MDBCardBody>
               <MDBInput
                 label="First Name"
-                onChange={(e) =>
-                  setFirstName(e.target.value.trim())
-                }
+                onChange={(e) => setFirstName(e.target.value.trim())}
               />
               <MDBInput
                 label="Last Name"
-                onChange={(e) =>
-                  setLastName(e.target.value.trim())
-                }
+                onChange={(e) => setLastName(e.target.value.trim())}
               />
               <select
                 id="defaultFormCardNameEx"
