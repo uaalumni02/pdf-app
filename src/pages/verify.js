@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useReducer } from "react";
 import { Navigate } from "react-router-dom";
 import initialState from "../store/store";
 import reducer from "../reducer/reducer";
@@ -75,9 +75,6 @@ const Verify = () => {
                 label="Enter Code"
                 name="certificateId"
                 value={certificateId}
-                // onChange={(e) =>
-                //   setCertificateId(e.target.value.toLowerCase().trim())
-                // }
                 onChange={onChange}
               />
               <br></br>

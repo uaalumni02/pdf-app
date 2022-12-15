@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useReducer } from "react";
+import initialState from "../store/store";
+import reducer from "../reducer/reducer";
+
 import { Navigate } from "react-router-dom";
 import SubmitBtn from "../components/SubmitBtn";
 import "../certificate.css";
@@ -10,19 +13,10 @@ import {
   MDBCard,
   MDBCardBody,
   MDBInput,
-  MDBBtn,
 } from "mdbreact";
 
 const Certificate = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [awardType, setAwardType] = useState([]);
-  const [awardId, setAwardId] = useState("");
-  const [certificateDate, setCertificateDate] = useState("");
-  const [certificateConfirmation, setCertificateConfirmation] = useState(false);
-  const [certificateId, setCertificateId] = useState("");
-  const [invalidCertificate, setInvalidCertificate] = useState("");
-
+  const [state, dispatch] = useReducer(reducer, initialState.certificate);
   const fetchAwardData = () => {
     fetch("http://localhost:3000/api/award", {
       method: "GET",
@@ -30,8 +24,14 @@ const Certificate = () => {
       .then((res) => res.json())
       .then((response) => {
         const award = response.data;
-        setAwardType(award);
-        setAwardId(response.data[0]._id);
+        dispatch({
+          field: "awardType",
+          value: award,
+        });
+        dispatch({
+          field: "awardId",
+          value: response.data[0]._id,
+        });
       })
       .catch((error) => console.error("Error:", error));
   };
@@ -57,18 +57,46 @@ const Certificate = () => {
       .then((res) => res.json())
       .then((response) => {
         if (response.success === false) {
-          setInvalidCertificate(
-            "First and last name must be between 2 & 15 charaters. Date and award type are also required"
-          );
+          dispatch({
+            field: "invalidCertificate",
+            value:
+              "First and last name must be between 2 & 15 charaters. Date and award type are also required",
+          });
         }
-        setCertificateId(response.data._id);
+
+        dispatch({
+          field: "certificateId",
+          value: response.data._id,
+        });
 
         if (response.success) {
-          setCertificateConfirmation(true);
+          dispatch({
+            field: "certificateConfirmation",
+            value: true,
+          });
         }
       })
       .catch((error) => console.error("Error:", error));
   };
+
+  const onChange = (e) => {
+    dispatch({
+      field: e.target.name,
+      value: e.target.value.trim(),
+    });
+  };
+
+  const {
+    firstName,
+    lastName,
+    awardType,
+    awardId,
+    certificateDate,
+    certificateConfirmation,
+    certificateId,
+    invalidCertificate,
+  } = state;
+
   return (
     <MDBContainer>
       <header className="logo"></header>
@@ -87,16 +115,22 @@ const Certificate = () => {
             <MDBCardBody>
               <MDBInput
                 label="First Name"
-                onChange={(e) => setFirstName(e.target.value.trim())}
+                name="firstName"
+                value={firstName}
+                onChange={onChange}
               />
               <MDBInput
                 label="Last Name"
-                onChange={(e) => setLastName(e.target.value.trim())}
+                name="lastName"
+                value={lastName}
+                onChange={onChange}
               />
               <select
                 id="defaultFormCardNameEx"
                 className="form-control"
-                onChange={(e) => setAwardId(e.target.value)}
+                name="awardId"
+                value={awardId}
+                onChange={onChange}
               >
                 {awardType.map((award) => {
                   return (
@@ -119,7 +153,8 @@ const Certificate = () => {
                 id="defaultFormCardNameEx"
                 className="form-control"
                 name="certificateDate"
-                onChange={(e) => setCertificateDate(e.target.value)}
+                value={certificateDate}
+                onChange={onChange}
               />
               <div className="text-center py-4 mt-3">
                 <SubmitBtn
