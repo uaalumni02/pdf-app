@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import SubmitBtn from "../components/SubmitBtn";
+import settings from "../config/configData";
 
 import { MDBContainer } from "mdbreact";
 
@@ -7,7 +8,7 @@ const Pdf = () => {
   const generatePDF = () => {
     const url = window.location.pathname;
     const id = url.substring(url.lastIndexOf("/") + 1);
-    fetch("http://localhost:3000/api/generate_certificate/" + id, {
+    fetch(`${settings.apiBaseUrl}/api/generate_certificate/` + id, {
       method: "GET",
     })
       .then((res) => res.blob())
@@ -28,10 +29,12 @@ const Pdf = () => {
   return (
     <MDBContainer>
       <h1 className="confirm_text">Your certificate has been downloaded</h1>
-      <div className="home_btn" >
-        <SubmitBtn onClick={event =>  window.location.href='/'} label="Home" />
+      <div className="home_btn">
+        <SubmitBtn
+          onClick={(event) => (window.location.href = "/")}
+          label="Home"
+        />
       </div>
-      
     </MDBContainer>
   );
 };

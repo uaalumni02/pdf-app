@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from "react";
 import initialState from "../store/store";
 import reducer from "../reducer/reducer";
+import settings from "../config/configData";
 
 import { Navigate } from "react-router-dom";
 import SubmitBtn from "../components/SubmitBtn";
@@ -18,7 +19,7 @@ import {
 const Certificate = () => {
   const [state, dispatch] = useReducer(reducer, initialState.certificate);
   const fetchAwardData = () => {
-    fetch("http://localhost:3000/api/award", {
+    fetch(`${settings.apiBaseUrl}/api/award`, {
       method: "GET",
     })
       .then((res) => res.json())

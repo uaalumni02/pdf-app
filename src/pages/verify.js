@@ -2,6 +2,7 @@ import React, { useReducer } from "react";
 import { Navigate } from "react-router-dom";
 import initialState from "../store/store";
 import reducer from "../reducer/reducer";
+import settings from "../config/configData";
 
 import SubmitBtn from "../components/SubmitBtn";
 
@@ -17,7 +18,7 @@ import {
 const Verify = () => {
   const [state, dispatch] = useReducer(reducer, initialState.verify);
   const handleSubmit = () => {
-    fetch("http://localhost:3000/api/certificate/" + certificateId, {
+    fetch(`${settings.apiBaseUrl}/api/certificate/` + certificateId, {
       method: "GET",
     })
       .then((res) => res.json())
