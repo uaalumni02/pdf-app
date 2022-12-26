@@ -18,6 +18,7 @@ import {
 const Verify = () => {
   const [state, dispatch] = useReducer(reducer, initialState.verify);
   const handleSubmit = () => {
+    // use react query---needs to be smaller ----------
     fetch(`${settings.apiBaseUrl}/api/certificate/` + certificateId, {
       method: "GET",
     })
@@ -65,15 +66,15 @@ const Verify = () => {
             <div className="header pt-3 grey lighten-2">
               <MDBRow className="d-flex justify-content-start">
                 <h3 className="deep-grey-text mt-3 mb-4 pb-1 mx-5">
-                  Verify Certificate Enter Code
+                  Verify Certificate Enter ID
                 </h3>
               </MDBRow>
             </div>
             <MDBCardBody>
               <MDBInput
                 required
-                type="password"
-                label="Enter Code"
+                type="text"
+                label="Enter ID"
                 name="certificateId"
                 value={certificateId}
                 onChange={onChange}
@@ -88,14 +89,12 @@ const Verify = () => {
                   onClick={handleSubmit}
                   type="Submit"
                 />
-                <SubmitBtn
-                  className="btn"
-                  onClick={(event) => (window.location.href = "/")}
-                  label="Home"
-                />
                 <br></br>
                 <br></br>
                 <p>{invalidCertificate}</p>
+                <p>
+                  <a href="/">Home</a>
+                </p>
               </div>
             </MDBCardBody>
           </MDBCard>

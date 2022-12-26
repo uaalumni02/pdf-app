@@ -5,8 +5,7 @@ const initialState = {
     certificateConfirmation: false,
   },
   certificate: {
-    firstName: "",
-    lastName: "",
+    Name: "",
     awardType: [],
     awardId: "",
     certificateDate: "",

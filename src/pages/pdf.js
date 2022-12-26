@@ -6,6 +6,8 @@ import { MDBContainer } from "mdbreact";
 
 const Pdf = () => {
   const generatePDF = () => {
+    // use use params here to get the id ------
+    //also look at use react query -----
     const url = window.location.pathname;
     const id = url.substring(url.lastIndexOf("/") + 1);
     fetch(`${settings.apiBaseUrl}/api/generate_certificate/` + id, {
@@ -30,10 +32,9 @@ const Pdf = () => {
     <MDBContainer>
       <h1 className="confirm_text">Your certificate has been downloaded</h1>
       <div className="home_btn">
-        <SubmitBtn
-          onClick={(event) => (window.location.href = "/")}
-          label="Home"
-        />
+        <h3>
+        <a href="/">Home</a>
+        </h3>
       </div>
     </MDBContainer>
   );

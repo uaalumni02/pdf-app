@@ -41,6 +41,7 @@ const Certificate = () => {
     fetchAwardData();
   }, []);
 
+  //can this function be smaller --- check out react query library*******
   const handleSubmit = (event) => {
     event.preventDefault();
     fetch("http://localhost:3000/api/certificate/", {
@@ -49,8 +50,7 @@ const Certificate = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        firstName,
-        lastName,
+        Name,
         awardType: awardId,
         certificateDate,
       }),
@@ -83,13 +83,12 @@ const Certificate = () => {
   const onChange = (e) => {
     dispatch({
       field: e.target.name,
-      value: e.target.value.trim(),
+      value: e.target.value
     });
   };
 
   const {
-    firstName,
-    lastName,
+    Name,
     awardType,
     awardId,
     certificateDate,
@@ -98,6 +97,13 @@ const Certificate = () => {
     invalidCertificate,
   } = state;
 
+  //state does not need to be in the store; since it is not global
+
+  // check out Tailwind for css-------------
+
+  // dony use <br> use css for that
+
+  //use react router instead of using window.location---see below
   return (
     <MDBContainer>
       <header className="logo"></header>
@@ -115,17 +121,12 @@ const Certificate = () => {
             </div>
             <MDBCardBody>
               <MDBInput
-                label="First Name"
-                name="firstName"
-                value={firstName}
+                label="Name"
+                name="Name"
+                value={Name}
                 onChange={onChange}
               />
-              <MDBInput
-                label="Last Name"
-                name="lastName"
-                value={lastName}
-                onChange={onChange}
-              />
+              <br></br>
               <select
                 id="defaultFormCardNameEx"
                 className="form-control"
@@ -163,12 +164,10 @@ const Certificate = () => {
                   label="Submit"
                   onClick={handleSubmit}
                 />
-                <SubmitBtn
-                  className="btn"
-                  label="Verify"
-                  onClick={(event) => (window.location.href = "/verify")}
-                />
                 <p>{invalidCertificate}</p>
+                <p>
+                  <a href="/verify">Verify</a>
+                </p>
               </div>
             </MDBCardBody>
           </MDBCard>
