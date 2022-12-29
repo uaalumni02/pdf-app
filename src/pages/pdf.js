@@ -18,6 +18,7 @@ const Pdf = () => {
         let alink = document.createElement("a");
         alink.href = fileURL;
         alink.render = "certificate.pdf";
+        alink.setAttribute('target', '_blank');
         alink.click();
       })
       .catch((error) => console.error("Error:", error));
@@ -29,7 +30,7 @@ const Pdf = () => {
 
   return (
     <MDBContainer>
-      <h1 className="confirm_text">Your certificate has been downloaded</h1>
+      <h1 className="confirm_text">Your certificate has been rendered</h1>
       <div className="home_btn">
         <h3>
           <a href="/">Home</a>
