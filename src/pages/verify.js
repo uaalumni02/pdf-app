@@ -92,9 +92,9 @@ const Verify = () => {
                 <br></br>
                 <br></br>
                 <p>{invalidCertificate}</p>
-                <p>
+                <h3>
                   <a href="/">Home</a>
-                </p>
+                </h3>
               </div>
             </MDBCardBody>
           </MDBCard>

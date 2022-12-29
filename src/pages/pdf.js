@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import SubmitBtn from "../components/SubmitBtn";
 import settings from "../config/configData";
 
 import { MDBContainer } from "mdbreact";
@@ -18,7 +17,7 @@ const Pdf = () => {
         const fileURL = window.URL.createObjectURL(blob);
         let alink = document.createElement("a");
         alink.href = fileURL;
-        alink.download = "certificate.pdf";
+        alink.render = "certificate.pdf";
         alink.click();
       })
       .catch((error) => console.error("Error:", error));
@@ -33,7 +32,7 @@ const Pdf = () => {
       <h1 className="confirm_text">Your certificate has been downloaded</h1>
       <div className="home_btn">
         <h3>
-        <a href="/">Home</a>
+          <a href="/">Home</a>
         </h3>
       </div>
     </MDBContainer>

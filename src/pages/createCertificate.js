@@ -83,7 +83,7 @@ const Certificate = () => {
   const onChange = (e) => {
     dispatch({
       field: e.target.name,
-      value: e.target.value
+      value: e.target.value,
     });
   };
 
@@ -165,9 +165,9 @@ const Certificate = () => {
                   onClick={handleSubmit}
                 />
                 <p>{invalidCertificate}</p>
-                <p>
+                <h3>
                   <a href="/verify">Verify</a>
-                </p>
+                </h3>
               </div>
             </MDBCardBody>
           </MDBCard>
