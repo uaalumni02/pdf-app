@@ -59,7 +59,7 @@ const Verify = () => {
     <MDBContainer>
       <header className="logo"></header>
       <br></br>
-      {certificateConfirmation ? <Navigate to={`/pdf/${certificateId}`} /> : ""}
+      {certificateConfirmation ? <Navigate to={`/confirm/${certificateId}`} /> : ""}
       <MDBRow>
         <MDBCol md="5">
           <MDBCard className="certificateCard">
