@@ -1,4 +1,6 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
+import { useQuery, useMutation } from "react-query";
+import axios from "axios";
 import initialState from "../store/store";
 import reducer from "../reducer/reducer";
 import settings from "../config/configData";
@@ -17,85 +19,86 @@ import {
 } from "mdbreact";
 
 const Certificate = () => {
-  const [state, dispatch] = useReducer(reducer, initialState.certificate);
-  const fetchAwardData = () => {
-    fetch(`${settings.apiBaseUrl}/api/award`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        const award = response.data;
-        dispatch({
-          field: "awardType",
-          value: award,
-        });
-        dispatch({
-          field: "awardId",
-          value: response.data[0]._id,
-        });
-      })
-      .catch((error) => console.error("Error:", error));
+  const [state, setState] = useState({
+    Name: "",
+    awardType: [],
+    certificateDate: "",
+  });
+  const fetchAwardData = async () => {
+    const { data } = await axios.get(`${settings.apiBaseUrl}/api/award`);
+    return data;
   };
 
-  useEffect(() => {
-    fetchAwardData();
-  }, []);
+  const { isLoading, data, error } = useQuery("certificate", fetchAwardData);
 
-  //can this function be smaller --- check out react query library*******
+  if (isLoading) return "Loading...";
+  if (error) return "An error has occurred: " + error.message;
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:3000/api/certificate/", {
-      method: "post",
+    return fetch(`${settings.apiBaseUrl}/api/certificate/`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        Name,
-        awardType: awardId,
-        certificateDate,
-      }),
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        if (response.success === false) {
-          dispatch({
-            field: "invalidCertificate",
-            value:
-              "First and last name must be between 2 & 15 charaters. Date and award type are also required",
-          });
-        }
-
-        dispatch({
-          field: "certificateId",
-          value: response.data._id,
-        });
-
-        if (response.success) {
-          dispatch({
-            field: "certificateConfirmation",
-            value: true,
-          });
-        }
-      })
-      .catch((error) => console.error("Error:", error));
-  };
-
-  const onChange = (e) => {
-    dispatch({
-      field: e.target.name,
-      value: e.target.value,
+      body: JSON.stringify(state),
     });
   };
 
-  const {
-    Name,
-    awardType,
-    awardId,
-    certificateDate,
-    certificateConfirmation,
-    certificateId,
-    invalidCertificate,
-  } = state;
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   fetch("http://localhost:3000/api/certificate/", {
+  //     method: "post",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       Name,
+  //       awardType: awardId,
+  //       certificateDate,
+  //     }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((response) => {
+  //       if (response.success === false) {
+  //         dispatch({
+  //           field: "invalidCertificate",
+  //           value:
+  //             "First and last name must be between 2 & 15 charaters. Date and award type are also required",
+  //         });
+  //       }
+
+  //       dispatch({
+  //         field: "certificateId",
+  //         value: response.data._id,
+  //       });
+
+  //       if (response.success) {
+  //         dispatch({
+  //           field: "certificateConfirmation",
+  //           value: true,
+  //         });
+  //       }
+  //     })
+  //     .catch((error) => console.error("Error:", error));
+  // };
+
+  // const onChange = (e) => {
+  //   dispatch({
+  //     field: e.target.name,
+  //     value: e.target.value,
+  //   });
+  // };
+
+  // const {
+  //   Name,
+  //   awardType,
+  //   awardId,
+  //   certificateDate,
+  //   certificateConfirmation,
+  //   certificateId,
+  //   invalidCertificate,
+  // } = state;
 
   //state does not need to be in the store; since it is not global
 
@@ -108,7 +111,7 @@ const Certificate = () => {
     <MDBContainer>
       <header className="logo"></header>
       <br></br>
-      {certificateConfirmation ? <Navigate to={`/pdf/${certificateId}`} /> : ""}
+      {/* {certificateConfirmation ? <Navigate to={`/pdf/${certificateId}`} /> : ""} */}
       <MDBRow>
         <MDBCol md="5">
           <MDBCard className="certificateCard">
@@ -123,18 +126,24 @@ const Certificate = () => {
               <MDBInput
                 label="Name"
                 name="Name"
-                value={Name}
-                onChange={onChange}
+                value={state.Name}
+                // onChange={onChange}
+                onChange={({ target: { value } }) => {
+                  setState({ ...state, Name: value });
+                }}
               />
               <br></br>
               <select
                 id="defaultFormCardNameEx"
                 className="form-control"
                 name="awardId"
-                value={awardId}
-                onChange={onChange}
+                // value={awardId}
+                // onChange={onChange}
+                onChange={({ target: { value } }) => {
+                  setState({ ...state, awardType: value });
+                }}
               >
-                {awardType.map((award) => {
+                {data.data.map((award) => {
                   return (
                     <option value={award._id} key={award._id}>
                       {award.awardType}
@@ -155,8 +164,11 @@ const Certificate = () => {
                 id="defaultFormCardNameEx"
                 className="form-control"
                 name="certificateDate"
-                value={certificateDate}
-                onChange={onChange}
+                // value={certificateDate}
+                // onChange={onChange}
+                onChange={({ target: { value } }) => {
+                  setState({ ...state, certificateDate: value });
+                }}
               />
               <div className="text-center py-4 mt-3">
                 <SubmitBtn
@@ -164,7 +176,7 @@ const Certificate = () => {
                   label="Submit"
                   onClick={handleSubmit}
                 />
-                <p>{invalidCertificate}</p>
+                {/* <p>{invalidCertificate}</p> */}
                 <h3>
                   <a href="/verify">Verify</a>
                 </h3>
