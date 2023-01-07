@@ -1,4 +1,6 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
+import { useQuery } from "react-query";
+import axios from "axios";
 import { Navigate } from "react-router-dom";
 import initialState from "../store/store";
 import reducer from "../reducer/reducer";
@@ -16,50 +18,62 @@ import {
 } from "mdbreact";
 
 const Verify = () => {
-  const [state, dispatch] = useReducer(reducer, initialState.verify);
-  const handleSubmit = () => {
-    // use react query---needs to be smaller ----------
-    fetch(`${settings.apiBaseUrl}/api/certificate/` + certificateId, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        if (response.success === false) {
-          dispatch({
-            field: "invalidCertificate",
-            value: "Invalid Certificate Id",
-          });
-        }
-        if (response.success) {
-          dispatch({
-            field: "certificateConfirmation",
-            value: true,
-          });
-        }
-        if (certificateId === "") {
-          dispatch({
-            field: "certificateConfirmation",
-            value: false,
-          });
-        }
-      })
-      .catch((error) => console.error("Error:", error));
-  };
+  const [state, setState] = useState({
+    certificateId: "",
+    invalidCertificate: "",
+    certificateConfirmation: false,
+  });
+  const handleSubmit = async () => {
+  const { data } = await axios.get(`${settings.apiBaseUrl}/api/certificate/` + state.certificateId);
+  return data;
+};
 
-  const onChange = (e) => {
-    dispatch({
-      field: e.target.name,
-      value: e.target.value,
-    });
-  };
 
-  const { certificateId, invalidCertificate, certificateConfirmation } = state;
+// const Verify = () => {
+//   const [state, dispatch] = useReducer(reducer, initialState.verify);
+//   const handleSubmit = () => {
+//     // use react query---needs to be smaller ----------
+//     fetch(`${settings.apiBaseUrl}/api/certificate/` + certificateId, {
+//       method: "GET",
+//     })
+//       .then((res) => res.json())
+//       .then((response) => {
+//         if (response.success === false) {
+//           dispatch({
+//             field: "invalidCertificate",
+//             value: "Invalid Certificate Id",
+//           });
+//         }
+//         if (response.success) {
+//           dispatch({
+//             field: "certificateConfirmation",
+//             value: true,
+//           });
+//         }
+//         if (certificateId === "") {
+//           dispatch({
+//             field: "certificateConfirmation",
+//             value: false,
+//           });
+//         }
+//       })
+//       .catch((error) => console.error("Error:", error));
+//   };
+
+  // const onChange = (e) => {
+  //   dispatch({
+  //     field: e.target.name,
+  //     value: e.target.value,
+  //   });
+  // };
+
+  // const { certificateId, invalidCertificate, certificateConfirmation } = state;
 
   return (
     <MDBContainer>
       <header className="logo"></header>
       <br></br>
-      {certificateConfirmation ? <Navigate to={`/confirm/${certificateId}`} /> : ""}
+      {/* {certificateConfirmation ? <Navigate to={`/confirm/${certificateId}`} /> : ""} */}
       <MDBRow>
         <MDBCol md="5">
           <MDBCard className="certificateCard">
@@ -76,8 +90,10 @@ const Verify = () => {
                 type="text"
                 label="Enter ID"
                 name="certificateId"
-                value={certificateId}
-                onChange={onChange}
+                value={state.certificateId}
+                onChange={({ target: { value } }) => {
+                  setState({ ...state, certificateId: value });
+                }}
               />
               <br></br>
               <br></br>
@@ -91,7 +107,7 @@ const Verify = () => {
                 />
                 <br></br>
                 <br></br>
-                <p>{invalidCertificate}</p>
+                {/* <p>{invalidCertificate}</p> */}
                 <h3>
                   <a href="/">Home</a>
                 </h3>

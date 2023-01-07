@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import settings from "../config/configData";
 
@@ -17,46 +17,64 @@ import {
 } from "mdbreact";
 
 const Certificate = () => {
-  const [state, setState] = useState({
-    Name: "",
-    awardType: [],
-    certificateDate: "",
-  });
   const [invalidCertificate, setInvalidCertificate] = useState("");
   const [certificateId, setCertificateId] = useState("");
   const [certificateConfirmation, setCertificateConfirmation] = useState(false);
+  const [Name, setName] = useState("");
+  const [certificateDate, setCertificateDate] = useState("");
+  const [awardType, setAwardType] = useState([]);
   const fetchAwardData = async () => {
     const { data } = await axios.get(`${settings.apiBaseUrl}/api/award`);
     return data;
   };
 
-  const { isLoading, data, error } = useQuery("certificate", fetchAwardData);
+  const { isLoading, data, error, refetch } = useQuery(
+    "certificate",
+    fetchAwardData
+  );
 
-  if (isLoading) return "Loading...";
-  if (error) return "An error has occurred: " + error.message;
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    return fetch(`${settings.apiBaseUrl}/api/certificate/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(state),
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        if (response.success === false) {
-          setInvalidCertificate(
-            "First and last name must be between 2 & 15 charaters. Date and award type are also required"
-          );
-        }
-        setCertificateId(response.data._id);
-        if (response.success) {
-          setCertificateConfirmation(true);
-        }
-      });
+  const createCertificate = async () => {
+    try {
+      return await (
+        await fetch(`${settings.apiBaseUrl}/api/certificate/`, {
+          method: "POST",
+          body: JSON.stringify({
+            Name,
+            certificateDate,
+            awardType,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+    } catch (err) {
+      throw new Error(err);
+    }
   };
+
+  const {
+    mutate,
+    isLoading: isAddingCertificate,
+    error: addError,
+  } = useMutation(createCertificate, {
+    onSuccess: (data) => {
+      console.log(data);
+      setCertificateId(data.data._id);
+      if (data.success) {
+        setCertificateConfirmation(true);
+      }
+      if (error == null) {
+        setInvalidCertificate(
+          "First and last name must be between 2 & 15 charaters. Date and award type are also required"
+        );
+      }
+    },
+  });
+
+  if (isLoading || isAddingCertificate) return "Loading...";
+  if (error || addError) return "An error has occurred: " + error.message;
+
   return (
     <MDBContainer>
       <header className="logo"></header>
@@ -75,9 +93,8 @@ const Certificate = () => {
               <MDBInput
                 label="Name"
                 name="Name"
-                value={state.Name}
                 onChange={({ target: { value } }) => {
-                  setState({ ...state, Name: value });
+                  setName(value);
                 }}
               />
               <select
@@ -85,7 +102,8 @@ const Certificate = () => {
                 className="form-control"
                 name="awardId"
                 onChange={({ target: { value } }) => {
-                  setState({ ...state, awardType: value });
+                  console.log(value);
+                  setAwardType(value);
                 }}
               >
                 {data.data.map((award) => {
@@ -108,14 +126,14 @@ const Certificate = () => {
                 className="form-control"
                 name="certificateDate"
                 onChange={({ target: { value } }) => {
-                  setState({ ...state, certificateDate: value });
+                  setCertificateDate(value);
                 }}
               />
               <div className="text-center py-4 mt-3">
                 <SubmitBtn
                   className="btn"
                   label="Submit"
-                  onClick={handleSubmit}
+                  onClick={() => mutate({ Name, certificateDate, awardType })}
                 />
                 <h3>
                   <a href="/verify">Verify</a>
