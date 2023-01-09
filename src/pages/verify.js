@@ -1,9 +1,7 @@
-import React, { useReducer, useState } from "react";
-import { useQuery } from "react-query";
+import React, { useState } from "react";
+import { useMutation } from "react-query";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
-import initialState from "../store/store";
-import reducer from "../reducer/reducer";
 import settings from "../config/configData";
 
 import SubmitBtn from "../components/SubmitBtn";
@@ -18,62 +16,44 @@ import {
 } from "mdbreact";
 
 const Verify = () => {
-  const [state, setState] = useState({
-    certificateId: "",
-    invalidCertificate: "",
-    certificateConfirmation: false,
-  });
+  const [certificateId, setCertificateId] = useState("");
+  const [invalidCertificate, setInvalidCertificate] = useState("");
+  const [certificateConfirmation, setCertificateConfirmation] = useState(false);
+
   const handleSubmit = async () => {
-  const { data } = await axios.get(`${settings.apiBaseUrl}/api/certificate/` + state.certificateId);
-  return data;
-};
+    const { data } = await axios.get(
+      `${settings.apiBaseUrl}/api/certificate/` + certificateId
+    );
+    return data;
+  };
 
-
-// const Verify = () => {
-//   const [state, dispatch] = useReducer(reducer, initialState.verify);
-//   const handleSubmit = () => {
-//     // use react query---needs to be smaller ----------
-//     fetch(`${settings.apiBaseUrl}/api/certificate/` + certificateId, {
-//       method: "GET",
-//     })
-//       .then((res) => res.json())
-//       .then((response) => {
-//         if (response.success === false) {
-//           dispatch({
-//             field: "invalidCertificate",
-//             value: "Invalid Certificate Id",
-//           });
-//         }
-//         if (response.success) {
-//           dispatch({
-//             field: "certificateConfirmation",
-//             value: true,
-//           });
-//         }
-//         if (certificateId === "") {
-//           dispatch({
-//             field: "certificateConfirmation",
-//             value: false,
-//           });
-//         }
-//       })
-//       .catch((error) => console.error("Error:", error));
-//   };
-
-  // const onChange = (e) => {
-  //   dispatch({
-  //     field: e.target.name,
-  //     value: e.target.value,
-  //   });
-  // };
-
-  // const { certificateId, invalidCertificate, certificateConfirmation } = state;
+  const { mutate } = useMutation(handleSubmit, {
+    onSuccess: (data) => {
+      setCertificateId(data.data._id);
+      if (data.success) {
+        setCertificateConfirmation(true);
+      }
+      if (certificateId == "") {
+        setCertificateConfirmation(false);
+      }
+    },
+    onError: (error) => {
+      if (error) {
+        setInvalidCertificate("Invalid Certificate Id");
+      }
+      throw error;
+    },
+  });
 
   return (
     <MDBContainer>
       <header className="logo"></header>
       <br></br>
-      {/* {certificateConfirmation ? <Navigate to={`/confirm/${certificateId}`} /> : ""} */}
+      {certificateConfirmation ? (
+        <Navigate to={`/confirm/${certificateId}`} />
+      ) : (
+        ""
+      )}
       <MDBRow>
         <MDBCol md="5">
           <MDBCard className="certificateCard">
@@ -90,9 +70,9 @@ const Verify = () => {
                 type="text"
                 label="Enter ID"
                 name="certificateId"
-                value={state.certificateId}
+                value={certificateId}
                 onChange={({ target: { value } }) => {
-                  setState({ ...state, certificateId: value });
+                  setCertificateId(value);
                 }}
               />
               <br></br>
@@ -102,15 +82,15 @@ const Verify = () => {
                 <SubmitBtn
                   className="btn"
                   label="Verify"
-                  onClick={handleSubmit}
                   type="Submit"
+                  onClick={() => mutate()}
                 />
                 <br></br>
                 <br></br>
-                {/* <p>{invalidCertificate}</p> */}
                 <h3>
                   <a href="/">Home</a>
                 </h3>
+                <p>{invalidCertificate}</p>
               </div>
             </MDBCardBody>
           </MDBCard>

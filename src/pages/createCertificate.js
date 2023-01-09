@@ -28,7 +28,7 @@ const Certificate = () => {
     return data;
   };
 
-  const { isLoading, data, error, refetch } = useQuery(
+  const { isLoading, data, error } = useQuery(
     "certificate",
     fetchAwardData
   );
@@ -59,7 +59,6 @@ const Certificate = () => {
     error: addError,
   } = useMutation(createCertificate, {
     onSuccess: (data) => {
-      console.log(data);
       setCertificateId(data.data._id);
       if (data.success) {
         setCertificateConfirmation(true);
@@ -102,7 +101,6 @@ const Certificate = () => {
                 className="form-control"
                 name="awardId"
                 onChange={({ target: { value } }) => {
-                  console.log(value);
                   setAwardType(value);
                 }}
               >
