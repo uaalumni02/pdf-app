@@ -29,7 +29,6 @@ const Certificate = () => {
         const date = moment
           .unix(response.data.certificateDate)
           .format("MM/DD/YYYY");
-        console.log(date);
         dispatch({
           field: "Name",
           value: name,
