@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
@@ -22,7 +21,7 @@ const Pdf = () => {
     alink.click();
   };
 
-  const { isLoading, data, error } = useQuery("pdf", generatePDF);
+  const { isLoading, error } = useQuery("pdf", generatePDF);
 
   if (isLoading) return "Loading...";
   if (error) return "An error has occurred: " + error.message;

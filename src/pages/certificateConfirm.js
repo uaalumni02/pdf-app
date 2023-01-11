@@ -1,55 +1,29 @@
-import React, { useEffect, useReducer } from "react";
-import initialState from "../store/store";
-import reducer from "../reducer/reducer";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import settings from "../config/configData";
 import moment from "moment";
 
 import "../certificate.css";
 
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-} from "mdbreact";
+import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody } from "mdbreact";
 
 const Certificate = () => {
-  const [state, dispatch] = useReducer(reducer, initialState.certificate);
-  const fetchCertificateData = () => {
-    const url = window.location.pathname;
-    const id = url.substring(url.lastIndexOf("/") + 1);
-    fetch(`${settings.apiBaseUrl}/api/certificate/` + id, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        const name = response.data.Name;
-        const type = response.data.awardType.awardType;
-        const date = moment
-          .unix(response.data.certificateDate)
-          .format("MM/DD/YYYY");
-        dispatch({
-          field: "Name",
-          value: name,
-        });
-        dispatch({
-          field: "awardType",
-          value: type,
-        });
-        dispatch({
-          field: "certificateDate",
-          value: date,
-        });
-      })
-      .catch((error) => console.error("Error:", error));
+  let { id } = useParams();
+  const fetchCertificateData = async () => {
+    const { data } = await axios.get(
+      `${settings.apiBaseUrl}/api/certificate/` + id
+    );
+    return data;
   };
 
-  useEffect(() => {
-    fetchCertificateData();
-  }, []);
+  const { isLoading, data, error } = useQuery(
+    "certificateConfirmation",
+    fetchCertificateData
+  );
 
-  const { Name, awardType, certificateDate } = state;
+  if (isLoading) return "Loading...";
+  if (error) return "An error has occurred: " + error.message;
 
   return (
     <MDBContainer>
@@ -68,8 +42,9 @@ const Certificate = () => {
             </div>
             <MDBCardBody>
               <h6>
-                This certificate was awarded to {Name} for {awardType} on{" "}
-                {certificateDate}
+                This certificate was awarded to {data.data.Name}
+                for {data.data.awardType.awardType} on{" "}
+                {moment.unix(data.data.certificateDate).format("MM/DD/YYYY")}
               </h6>
 
               <h5>
