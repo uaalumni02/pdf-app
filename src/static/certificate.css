@@ -21,9 +21,28 @@ height: 50px;
     left: 45%;
 }
 
+
 #awardPicker {
-    margin-top: 55px;
+    margin-top: 2px;
 }
-#datePicker {
-    margin-top: 55px;
+
+#dateLabel {
+    margin-top: 30px;
+}
+
+#awardLabel {
+    margin-top: 20px;
+}
+
+.verify {
+    width: 100px;
+    height: 500px;
+    
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 150px;
+    right: 0;
+    
+    margin: auto;
 }

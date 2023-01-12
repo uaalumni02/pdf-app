@@ -4,7 +4,7 @@ import axios from "axios";
 import settings from "../config/configData";
 import moment from "moment";
 
-import "../certificate.css";
+import "../static/certificate.css"
 
 import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody } from "mdbreact";
 
@@ -26,10 +26,8 @@ const Certificate = () => {
   if (error) return "An error has occurred: " + error.message;
 
   return (
-    <MDBContainer>
+    <MDBContainer className="verify">
       <header className="logo"></header>
-      <br></br> <br></br>
-      <br></br> <br></br>
       <MDBRow>
         <MDBCol md="5">
           <MDBCard className="certificateCard">

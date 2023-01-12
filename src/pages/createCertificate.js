@@ -5,7 +5,6 @@ import settings from "../config/configData";
 
 import { Navigate } from "react-router-dom";
 import SubmitBtn from "../components/SubmitBtn";
-import "../certificate.css";
 
 import {
   MDBContainer,
@@ -96,6 +95,13 @@ const Certificate = () => {
                   setName(value);
                 }}
               />
+              <label
+                htmlFor="defaultFormCardNameEx"
+                className="grey-text font-weight-light"
+                id="awardLabel"
+              >
+                Select Award Type
+              </label>
               <select
                 id="awardPicker"
                 className="form-control"
@@ -115,6 +121,7 @@ const Certificate = () => {
               <label
                 htmlFor="defaultFormCardNameEx"
                 className="grey-text font-weight-light"
+                id="dateLabel"
               >
                 Select Date
               </label>
