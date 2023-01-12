@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import React, { useEffect } from "react";
 import axios from "axios";
 import settings from "../config/configData";
 
@@ -21,10 +21,9 @@ const Pdf = () => {
     alink.click();
   };
 
-  const { isLoading, error } = useQuery("pdf", generatePDF);
-
-  if (isLoading) return "Loading...";
-  if (error) return "An error has occurred: " + error.message;
+  useEffect(() => {
+    generatePDF();
+  }, [])
 
   return (
     <MDBContainer>
