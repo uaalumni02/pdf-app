@@ -40,7 +40,7 @@ const Certificate = () => {
             </div>
             <MDBCardBody>
               <h6>
-                This certificate was awarded to {data.data.Name}
+                This certificate was awarded to {data.data.Name} {" "}
                 for {data.data.awardType.awardType} on{" "}
                 {moment.unix(data.data.certificateDate).format("MM/DD/YYYY")}
               </h6>

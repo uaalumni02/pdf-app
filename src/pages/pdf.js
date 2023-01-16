@@ -3,7 +3,9 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import settings from "../config/configData";
 
-import { MDBContainer } from "mdbreact";
+import { MDBContainer, Su } from "mdbreact";
+
+import SubmitBtn from "../components/SubmitBtn";
 
 const Pdf = () => {
   let { id } = useParams();
@@ -21,13 +23,13 @@ const Pdf = () => {
     alink.click();
   };
 
-  useEffect(() => {
-    generatePDF();
-  }, [])
-
   return (
     <MDBContainer>
-      <h1 className="confirm_text">Your certificate has been rendered</h1>
+      <h1 className="confirm_text">Your certificate has been created</h1>
+      <h3 className="render_text">Please click below to render...</h3>
+      <div className="render_btn">
+        <SubmitBtn label="Render" onClick={generatePDF} />
+      </div>
       <div className="home_btn">
         <h3>
           <a href="/">Home</a>

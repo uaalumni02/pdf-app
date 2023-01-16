@@ -15,7 +15,19 @@ height: 50px;
     left: 30%;
 }
 
+.render_text {
+    position: fixed;
+    top: 40%;
+    left: 30%
+}
+
 .home_btn {
+    position: fixed;
+    top: 60%;
+    left: 45%;
+}
+
+.render_btn {
     position: fixed;
     top: 50%;
     left: 45%;
