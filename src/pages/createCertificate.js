@@ -27,10 +27,7 @@ const Certificate = () => {
     return data;
   };
 
-  const { isLoading, data, error } = useQuery(
-    "certificate",
-    fetchAwardData
-  );
+  const { isLoading, data, error } = useQuery("certificate", fetchAwardData);
 
   const createCertificate = async () => {
     try {
@@ -52,26 +49,24 @@ const Certificate = () => {
     }
   };
 
-  const {
-    mutate,
-    isLoading: isAddingCertificate,
-    error: addError,
-  } = useMutation(createCertificate, {
-    onSuccess: (data) => {
-      setCertificateId(data.data._id);
-      if (data.success) {
-        setCertificateConfirmation(true);
-      }
-      if (error == null) {
-        setInvalidCertificate(
-          "First and last name must be between 2 & 15 charaters. Date and award type are also required"
-        );
-      }
-    },
-  });
+  const { mutate, isLoading: isAddingCertificate } = useMutation(
+    createCertificate,
+    {
+      onSuccess: (data) => {
+        if (data.success) {
+          setCertificateConfirmation(true);
+          setCertificateId(data.data._id);
+        }
+        if (!data.success) {
+          setInvalidCertificate(
+            "First and last name must be between 2 & 15 charaters. Date and award type are also required"
+          );
+        }
+      },
+    }
+  );
 
   if (isLoading || isAddingCertificate) return "Loading...";
-  if (error || addError) return "An error has occurred: " + error.message;
 
   return (
     <MDBContainer>
@@ -138,7 +133,7 @@ const Certificate = () => {
                 <SubmitBtn
                   className="btn"
                   label="Submit"
-                  onClick={() => mutate({ Name, certificateDate, awardType })}
+                  onClick={() => mutate()}
                 />
                 <h3>
                   <a href="/verify">Verify</a>
